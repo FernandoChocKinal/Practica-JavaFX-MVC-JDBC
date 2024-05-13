@@ -10,10 +10,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="750.0" prefWidth="500.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="org.fernandochoc.controller.FormClienteController">
+<AnchorPane id="AnchorPane" prefHeight="750.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.fernandochoc.controller.FormClienteController">
    <children>
-      <ImageView fitHeight="750.0" fitWidth="500.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="750.0" fitWidth="500.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../image/FormCliente.png" />
          </image>
@@ -23,7 +22,7 @@
       <TextField fx:id="tfApellido" layoutX="176.0" layoutY="301.0" prefHeight="39.0" prefWidth="302.0" style="-fx-background-radius: 15;" />
       <TextField fx:id="tfTelefono" layoutX="180.0" layoutY="362.0" prefHeight="39.0" prefWidth="294.0" style="-fx-background-radius: 15;" />
       <TextField fx:id="tfDireccion" layoutX="184.0" layoutY="420.0" prefHeight="39.0" prefWidth="294.0" style="-fx-background-radius: 15;" />
-      <TextField fx:id="tfNit" layoutX="131.0" layoutY="482.0" prefHeight="39.0" prefWidth="302.0" style="-fx-background-radius: 15;" />
+      <TextField fx:id="tfNit" layoutX="161.0" layoutY="480.0" prefHeight="39.0" prefWidth="302.0" style="-fx-background-radius: 15;" />
       <GridPane layoutX="63.0" layoutY="572.0" prefHeight="125.0" prefWidth="375.0">
         <columnConstraints>
           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

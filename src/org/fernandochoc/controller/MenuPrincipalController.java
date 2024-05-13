@@ -5,7 +5,6 @@
  */
 package org.fernandochoc.controller;
 
-
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -17,23 +16,25 @@ import org.fernandochoc.system.Main;
 
 /**
  *
- * @author informatica
+ * @author Fercho
  */
 
 public class MenuPrincipalController implements Initializable {
     private Main stage;
     @FXML
-    MenuItem btnClientes;
+    MenuItem btnClientes, btnTicketSoporte;
     
     @FXML
     public void handleButtonAction(ActionEvent event) throws Exception{
         if(event.getSource() == btnClientes){
             stage.menuClienteView();
+        } else if(event.getSource() == btnTicketSoporte){
+            stage.menuTicketSoporteView();
         }
     }
     
     @Override
-    public void initialize(URL location, ResourceBundle resources){
+    public void initialize(URL location, ResourceBundle resources) {
         
     }
 
@@ -43,5 +44,5 @@ public class MenuPrincipalController implements Initializable {
 
     public void setStage(Main stage) {
         this.stage = stage;
-    }    
+    }        
 }

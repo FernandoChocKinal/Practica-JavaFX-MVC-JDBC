@@ -15,7 +15,7 @@ public class ClienteDTO {
     private static ClienteDTO instance;
     private Cliente cliente;
     
-    private ClienteDTO(){       
+    private ClienteDTO(){
     }
     
     public static ClienteDTO getClienteDTO(){
@@ -31,7 +31,5 @@ public class ClienteDTO {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
-    }
-    
-    
+    }   
 }

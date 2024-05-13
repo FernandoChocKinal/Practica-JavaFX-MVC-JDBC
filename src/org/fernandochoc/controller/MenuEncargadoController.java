@@ -18,24 +18,22 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.fernandochoc.dao.Conexion;
-import org.fernandochoc.dto.ClienteDTO;
-import org.fernandochoc.model.Cliente;
+import org.fernandochoc.dto.CargoDTO;
+import org.fernandochoc.model.Encargado;
 import org.fernandochoc.system.Main;
-import org.fernandochoc.utils.SuperKinalAlert;
 
 /**
  * FXML Controller class
  *
  * @author Fercho
  */
-public class MenuClienteController implements Initializable {
-    private Main stage;
+public class MenuEncargadoController implements Initializable {
+    Main stage;
     private int op;
     
     private static Connection conexion;
@@ -43,79 +41,71 @@ public class MenuClienteController implements Initializable {
     private static ResultSet resultSet;
     
     @FXML
-    TableView tblClientes;
+    TableView tblEncargados;
     @FXML
-    TableColumn colClienteId, colNombre, colApellido, colTelefono, colDireccion, colNit;
+    TableColumn colEncargadoId, colNombre, colDescripcion;
     @FXML
-    Button btnRegresar, btnAgregar, btnEditar, btnEliminar, btnBuscar;
+    Button btnAgregar, btnEditar, btnEliminar, btnRegresar, btnBuscar;
     @FXML
-    TextField tfClienteId;
-    
+    TextField tfEncargadoId;
+                    
     @FXML
     public void handleButtonAction(ActionEvent event){
         if(event.getSource() == btnRegresar){
             stage.menuPrincipalView();
         }else if(event.getSource() == btnAgregar){
-            stage.formClienteView(1);
+            stage.formCargoView(1);
         }else if(event.getSource() == btnEditar){
-            ClienteDTO.getClienteDTO().setCliente((Cliente)tblClientes.getSelectionModel().getSelectedItem());
-            stage.formClienteView(2);
+            CargoDTO.getCargoDTO().setCargo((Encargado)tblEncargados.getSelectionModel().getSelectedItem());
+            stage.formCargoView(2);
         }else if(event.getSource() == btnEliminar){
-            if(SuperKinalAlert.getInstance().mostrarAlertaConfirmacion(404).get() == ButtonType.OK){
-                eliminarCliente(((Cliente)tblClientes.getSelectionModel().getSelectedItem()).getClienteId());
-                cargarDatos();
-            }   
+           eliminarCargo(((Encargado)tblEncargados.getSelectionModel().getSelectedItem()).getCargoId()); 
+           cargarDatos();
         }else if(event.getSource() == btnBuscar){
-            tblClientes.getItems().clear();
-            
-            if(tfClienteId.getText().equals("")){
-                cargarDatos();
-            }else{
-                op = 3;
+            tblEncargados.getItems().clear();
+            if(tfEncargadoId.getText().equals("")){
                 cargarDatos();
             }
+            op = 3;
+            cargarDatos();
         }
     }
     
+    /**
+     * Initializes the controller class.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         cargarDatos();
-    }
+    }  
     
     public void cargarDatos(){
         if(op == 3){
-            //LLENAR LA TABLA CON EL CLIENTE BUSCADO
-            tblClientes.getItems().add(buscarCliente());
+            tblEncargados.getItems().add(buscarCargo());
             op = 0;
         }else{
-            tblClientes.setItems(listarClientes());
+            tblEncargados.setItems(listarEncargados());
         }
-        colClienteId.setCellValueFactory(new PropertyValueFactory<Cliente, Integer>("clienteId"));
-        colNombre.setCellValueFactory(new PropertyValueFactory<Cliente, String>("nombre"));
-        colApellido.setCellValueFactory(new PropertyValueFactory<Cliente, String>("apellido"));
-        colTelefono.setCellValueFactory(new PropertyValueFactory<Cliente, String>("telefono"));
-        colDireccion.setCellValueFactory(new PropertyValueFactory<Cliente, String>("direccion"));
-        colNit.setCellValueFactory(new PropertyValueFactory<Cliente, String>("nit"));
+        colEncargadoId.setCellValueFactory(new PropertyValueFactory<Encargado, Integer>("cargoId"));
+        colNombre.setCellValueFactory(new PropertyValueFactory<Encargado, String>("nombreCargo"));
+        colDescripcion.setCellValueFactory(new PropertyValueFactory<Encargado, String>("descripcionCargo"));
     }
     
-    public ObservableList<Cliente> listarClientes(){
-        ArrayList<Cliente> clientes = new ArrayList<>();
+    public ObservableList<Encargado> listarEncargados(){
+        ArrayList<Encargado> encargados = new ArrayList<>();
         
         try{
             conexion = Conexion.getInstance().obtenerConexion();
-            String sql = "call sp_listarClientes()";
+            String sql = "call sp_ListarCargos()";
             statement = conexion.prepareStatement(sql);
             resultSet = statement.executeQuery();
             
             while(resultSet.next()){
-                int clienteId = resultSet.getInt("clienteId");
-                String nombre = resultSet.getString("nombre");
-                String apellido = resultSet.getString("apellido");
-                String telefono = resultSet.getString("telefono");
-                String direccion = resultSet.getString("direccion");
-                String nit = resultSet.getString("nit");
+                int cargoId = resultSet.getInt("cargoId");
+                String nombreCargo = resultSet.getString("nombreCargo");
+                String descripcionCargo = resultSet.getString("descripcionCargo");
                 
-                clientes.add(new Cliente(clienteId, nombre, apellido, telefono, direccion, nit));
+                encargados.add(new Encargado(cargoId, nombreCargo, descripcionCargo));
             }
         }catch(SQLException e){
             System.out.println(e.getMessage());
@@ -134,15 +124,16 @@ public class MenuClienteController implements Initializable {
                 System.out.println(e.getMessage());
             }
         }
-        return FXCollections.observableList(clientes);
+        
+        return FXCollections.observableArrayList(encargados);
     }
     
-    public void eliminarCliente(int cliId){
+    public void eliminarCargo(int carId){
         try{
             conexion = Conexion.getInstance().obtenerConexion();
-            String sql = "call sp_eliminarCliente(?)";
+            String sql = "call sp_eliminarCargos(?)";
             statement = conexion.prepareStatement(sql);
-            statement.setInt(1, cliId);
+            statement.setInt(1, carId);
             statement.execute();
         }catch(SQLException e){
             System.out.println(e.getMessage());
@@ -150,36 +141,31 @@ public class MenuClienteController implements Initializable {
             try{
                 if(statement != null){
                     statement.close();
-                } 
+                }
                 if(conexion != null){
                     conexion.close();
                 }
             }catch(SQLException e){
-                System.out.println(e.getMessage());
-            }
-        }
+            System.out.println(e.getMessage()); 
+        } 
     }
-    
-    public Cliente buscarCliente(){
-        Cliente cliente = null;
+}
+    public Encargado buscarCargo(){
+        Encargado cargo = null;
         try{
             conexion = Conexion.getInstance().obtenerConexion();
-            String sql = "call sp_buscarCliente(?)";
+            String sql = "call sp_buscarCargos(?)";
             statement = conexion.prepareStatement(sql);
-            statement.setInt(1, Integer.parseInt(tfClienteId.getText()));
+            statement.setInt(1, Integer.parseInt(tfEncargadoId.getText()));
             resultSet = statement.executeQuery();
             
             if(resultSet.next()){
-                int clienteId = resultSet.getInt("clienteId");
-                String nombre = resultSet.getString("nombre");
-                String apellido = resultSet.getString("apellido");
-                String telefono = resultSet.getString("telefono");
-                String direccion = resultSet.getString("direccion");
-                String nit = resultSet.getString("nit");
+                int cargoId = resultSet.getInt("cargoId");
+                String nombreCargo = resultSet.getString("nombreCargo");
+                String descripcionCargo = resultSet.getString("descripcionCargo");
                 
-                cliente = new Cliente(clienteId, nombre, apellido, telefono, direccion, nit);
+                cargo = new Encargado(cargoId, nombreCargo, descripcionCargo);
             }
-            
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }finally{
@@ -197,15 +183,14 @@ public class MenuClienteController implements Initializable {
                 System.out.println(e.getMessage());
             }
         }
-        
-        return cliente;
+        return cargo;
     }
-
     public Main getStage() {
         return stage;
     }
 
     public void setStage(Main stage) {
         this.stage = stage;
-    }  
+    }
+    
 }

@@ -11,14 +11,14 @@ import java.sql.SQLException;
 
 /**
  *
- * @author informatica
+ * @author Fercho
  */
 public class Conexion {
     private static Conexion instance;
     
     private String jdbcurl = "jdbc:mysql://localhost:3306/SuperKinalDB?serverTimezone=GMT-6&useSSL=false";
     private String user = "root";
-    private String password = "1234";
+    private String password = "admin";
     
     private Conexion(){
         try{
@@ -33,7 +33,7 @@ public class Conexion {
             instance = new Conexion();
         }
         return instance;
-    }    
+    }
     
     public Connection obtenerConexion() throws SQLException{
         return DriverManager.getConnection(jdbcurl, user, password);
