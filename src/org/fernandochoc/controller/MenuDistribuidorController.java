@@ -24,53 +24,47 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.fernandochoc.dao.Conexion;
-import org.fernandochoc.dto.CategoriaProductoDTO;
-import org.fernandochoc.model.CategoriaProducto;
+import org.fernandochoc.dto.DistribuidorDTO;
+import org.fernandochoc.model.Distribuidor;
 import org.fernandochoc.system.Main;
 import org.fernandochoc.utils.SuperKinalAlert;
 /**
- * FXML Controller class
  *
  * @author Fercho
  */
-public class MenuCategoriaProductoController implements Initializable {
+public class MenuDistribuidorController implements Initializable {
     private Main stage;
-    
     private int op;
-    
     private static Connection conexion;
     private static PreparedStatement statement;
     private static ResultSet resultSet;
     
     @FXML
-    TableView tblCategoriaProductos;
-    
+    TableView tblDistribuidores;
     @FXML
-    TableColumn colCategoriaProductoId, colNombre, colDescripcion;
-    
+    TableColumn colDistribuidorId, colNombre, colTelefono, colNit, colDireccion, colWeb;
     @FXML
     Button btnRegresar, btnAgregar, btnEditar, btnEliminar, btnBuscar;
-    
     @FXML
-    TextField tfCategoriaProductoId;
+    TextField tfDistribuidorId;
     
     public void handleButtonAction(ActionEvent event){
         if(event.getSource() == btnRegresar){
             stage.menuPrincipalView();
         }else if(event.getSource() == btnAgregar){
-            stage.formCategoriaProductoView(1);
+            stage.formDistribuidorView(1);
         }else if(event.getSource() == btnEditar){
-            CategoriaProductoDTO.getCategoriaProductoDTO().setCategoriaProducto((CategoriaProducto)tblCategoriaProductos.getSelectionModel().getSelectedItem());
-            stage.formCategoriaProductoView(2);
+            DistribuidorDTO.getDistribuidorDTO().setDistribuidor((Distribuidor)tblDistribuidores.getSelectionModel().getSelectedItem());
+            stage.formDistribuidorView(2);
         }else if(event.getSource() == btnEliminar){
             if(SuperKinalAlert.getInstance().mostrarAlertaConfirmacion(404).get() == ButtonType.OK){
-                eliminarCategoriaProducto(((CategoriaProducto)tblCategoriaProductos.getSelectionModel().getSelectedItem()).getCategoriaProductoId());
+                eliminarDistribuidor(((Distribuidor)tblDistribuidores.getSelectionModel().getSelectedItem()).getDistribuidorId());
                 cargarDatos();
             }
         }else if(event.getSource() == btnBuscar){
-            tblCategoriaProductos.getItems().clear();
+            tblDistribuidores.getItems().clear();
             
-            if(tfCategoriaProductoId.getText().equals("")){
+            if(tfDistribuidorId.getText().equals("")){
                 cargarDatos();
             }else{
                 op = 3;
@@ -86,31 +80,37 @@ public class MenuCategoriaProductoController implements Initializable {
     
     public void cargarDatos(){
         if(op == 3){
-            tblCategoriaProductos.getItems().add(buscarCategoriaProducto());
+            tblDistribuidores.getItems().add(buscarDistribuidor()); 
             op = 0;
         }else{
-            tblCategoriaProductos.setItems(listarCategoriaProductos());
-            colCategoriaProductoId.setCellValueFactory(new PropertyValueFactory<CategoriaProducto, Integer>("categoriaProductoId"));
-            colNombre.setCellValueFactory(new PropertyValueFactory<CategoriaProducto, String>("nombreCategoria"));
-            colDescripcion.setCellValueFactory(new PropertyValueFactory<CategoriaProducto, String>("descripcionCategoria"));
+            tblDistribuidores.setItems(listarDistribuidores());
+            colDistribuidorId.setCellValueFactory(new PropertyValueFactory<Distribuidor, Integer>("distribuidorId"));
+            colNombre.setCellValueFactory(new PropertyValueFactory<Distribuidor, String>("nombreDistribuidor"));
+            colTelefono.setCellValueFactory(new PropertyValueFactory<Distribuidor, String>("telefonoDistribuidor"));
+            colNit.setCellValueFactory(new PropertyValueFactory<Distribuidor, String>("nitDistribuidor"));
+            colDireccion.setCellValueFactory(new PropertyValueFactory<Distribuidor, String>("direccionDistribuidor"));
+            colWeb.setCellValueFactory(new PropertyValueFactory<Distribuidor, String>("web"));
         }
     }
 
-    public ObservableList<CategoriaProducto> listarCategoriaProductos(){
-        ArrayList<CategoriaProducto> categoriaProductos = new ArrayList<>();
+    public ObservableList<Distribuidor> listarDistribuidores(){
+        ArrayList<Distribuidor> distribuidores = new ArrayList<>();
         
         try{
             conexion = Conexion.getInstance().obtenerConexion();
-            String sql = "call sp_listarCategoriaProductos()";
+            String sql = "call sp_listarDistribuidores()";
             statement = conexion.prepareStatement(sql);
             resultSet = statement.executeQuery();
             
             while(resultSet.next()){
-                int categoriaProductoId = resultSet.getInt("categoriaProductoId");
-                String nombreCategoria = resultSet.getString("nombreCategoria");  
-                String descripcionCategoria = resultSet.getString("descripcionCategoria");
+                int distribuidorId = resultSet.getInt("distribuidorId");
+                String nombreDistribuidor = resultSet.getString("nombreDistribuidor");  
+                String telefonoDistribuidor = resultSet.getString("telefonoDistribuidor");
+                String nitDistribuidor = resultSet.getString("nitDistribuidor");
+                String direccionDistribuidor = resultSet.getString("direccionDistribuidor");
+                String web = resultSet.getString("web");
                 
-                categoriaProductos.add(new CategoriaProducto(categoriaProductoId, nombreCategoria, descripcionCategoria));
+                distribuidores.add(new Distribuidor(distribuidorId, nombreDistribuidor, telefonoDistribuidor, nitDistribuidor, direccionDistribuidor, web));
             }
         }catch(SQLException e){
             System.out.println(e.getMessage());
@@ -128,17 +128,16 @@ public class MenuCategoriaProductoController implements Initializable {
             }catch(SQLException e){
                 System.out.println(e.getMessage());
             }
-        }
-        
-        return FXCollections.observableList(categoriaProductos);
+        }        
+        return FXCollections.observableList(distribuidores);
     }
     
-    public void eliminarCategoriaProducto(int capId){
+    public void eliminarDistribuidor(int disId){
         try{
             conexion = Conexion.getInstance().obtenerConexion();
-            String sql = "call sp_eliminarCategoriaProducto(?)";
+            String sql = "call sp_eliminarDistribuidor(?)";
             statement = conexion.prepareStatement(sql);
-            statement.setInt(1, capId);
+            statement.setInt(1, disId);
             statement.execute();
         }catch(SQLException e){
             System.out.println(e.getMessage());
@@ -156,23 +155,25 @@ public class MenuCategoriaProductoController implements Initializable {
         }
     }
     
-    public CategoriaProducto buscarCategoriaProducto(){
-        CategoriaProducto categoriaProducto = null;
+    public Distribuidor buscarDistribuidor(){
+        Distribuidor distribuidor = null;
         try{
             conexion = Conexion.getInstance().obtenerConexion();
-            String sql = "call sp_buscarCategoriaProducto(?)";
+            String sql = "call sp_buscarDistribuidor(?)";
             statement = conexion.prepareStatement(sql);
-            statement.setInt(1, Integer.parseInt(tfCategoriaProductoId.getText()));
+            statement.setInt(1, Integer.parseInt(tfDistribuidorId.getText()));
             resultSet = statement.executeQuery();
             
             if(resultSet.next()){
-                int categoriaProductoId = resultSet.getInt("categoriaProductoId");
-                String nombreCategoria = resultSet.getString("nombreCategoria");
-                String descripcionCategoria = resultSet.getString("descripcionCategoria");
+                int distribuidorId = resultSet.getInt("distribuidorId");
+                String nombreDistribuidor = resultSet.getString("nombreDistribuidor");  
+                String telefonoDistribuidor = resultSet.getString("telefonoDistribuidor");
+                String nitDistribuidor = resultSet.getString("nitDistribuidor");
+                String direccionDistribuidor = resultSet.getString("direccionDistribuidor");
+                String web = resultSet.getString("web");
                 
-                categoriaProducto = new CategoriaProducto(categoriaProductoId, nombreCategoria, descripcionCategoria);
-            }
-            
+                distribuidor = new Distribuidor(distribuidorId, nombreDistribuidor, telefonoDistribuidor, nitDistribuidor, direccionDistribuidor, web);
+            }            
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }finally{
@@ -190,9 +191,8 @@ public class MenuCategoriaProductoController implements Initializable {
             }catch(SQLException e){
                 System.out.println(e.getMessage());
             }
-        }
-     
-        return categoriaProducto;
+        }     
+        return distribuidor;
     }
 
     public Main getStage() {

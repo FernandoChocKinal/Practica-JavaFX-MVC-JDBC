@@ -7,7 +7,7 @@ package org.fernandochoc.model;
 
 /**
  *
- * @author informatica
+ * @author Fercho
  */
 public class Cliente {
     private int clienteId;
@@ -27,6 +27,11 @@ public class Cliente {
         this.telefono = telefono;
         this.direccion = direccion;
         this.nit = nit;
+    }
+
+    public Cliente(int clienteId, String nombre) {
+        this.clienteId = clienteId;
+        this.nombre = nombre;
     }
 
     public int getClienteId() {
@@ -65,8 +70,8 @@ public class Cliente {
         return direccion;
     }
 
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
+    public void setDireccion(String Direccion) {
+        this.direccion = Direccion;
     }
 
     public String getNit() {
@@ -79,6 +84,6 @@ public class Cliente {
 
     @Override
     public String toString() {
-        return "Cliente{" + "clienteId=" + clienteId + ", nombre=" + nombre + ", apellido=" + apellido + ", telefono=" + telefono + ", direccion=" + direccion + ", nit=" + nit + '}';
-    }
+        return "Id: " + clienteId + " " + nombre + " " + apellido;
+    }   
 }

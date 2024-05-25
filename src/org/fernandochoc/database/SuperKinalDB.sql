@@ -1,150 +1,142 @@
-drop database if exists superKinalDB;
+DROP DATABASE IF EXISTS SuperKinalDB;
+CREATE DATABASE IF NOT EXISTS SuperKinalDB;
+USE SuperKinalDB;
 
-create database if not exists superKinalDB;
-
-use superKinalDB;
-
-create table Clientes(
-	clienteId int not null auto_increment,
-    nombre varchar(30) not null,
-    apellido varchar(30) not null,
-    telefono varchar(15) not null,
-    direccion varchar(200) not null,
-    nit varchar(15) not null,
-    primary key PK_clienteId (clienteId)
+CREATE TABLE Clientes(
+	clienteId INT NOT NULL AUTO_INCREMENT,
+    nombre VARCHAR(30) NOT NULL,
+    apellido VARCHAR(30) NOT NULL,
+    telefono VARCHAR(15),
+    direccion VARCHAR(150) NOT NULL,
+    nit VARCHAR(15),
+    PRIMARY KEY PK_clienteId(clienteId)
 );
 
-create table Cargos(
-	cargoId int not null auto_increment,
-    nombreCargo varchar(30),
-    descripcionCargo varchar(100),
-    primary key PK_cargoId (cargoId)
-);
-    
-create table Empleados(
-	empleadoId int not null auto_increment,
-    nombreEmpleado varchar(30) not null,
-    apellidoEmpleado varchar(30) not null,
-    sueldo decimal(10,2) not null,
-    horaEntrada time not null,
-    horaSalida time not null,
-    cargoId int not null,
-    encargadoId int,
-    primary key PK_empleadoId (empleadoId),
-	constraint FK_Empleados_Cargos foreign key (cargoId)
-		references Cargos(cargoId),
-	constraint Encargad foreign key (encargadoId)
-		references Empleados(empleadoId)
+CREATE TABLE Cargos(
+	cargoId INT NOT NULL AUTO_INCREMENT,
+    nombreCargo VARCHAR(30) NOT NULL,
+    descripcionCargo VARCHAR(100) NOT NULL,
+    PRIMARY KEY PK_cargoId(cargoId)
 );
 
-create table Facturas(
-	facturaId int not null auto_increment,
-    fecha date not null,
-    hora time not null,
-    total decimal(10,2),
-    clienteId int not null,
-    empleadoId int not  null,
-    primary key PK_facturaId (facturaId),
-    constraint FK_Facturas_Clientes foreign key (clienteId)
-		references Clientes(clienteId),
-	constraint FK_Facturas_Empleados foreign key (empleadoId)
-		references Empleados(empleadoId)
+CREATE TABLE Empleados(
+	empleadoId INT NOT NULL AUTO_INCREMENT,
+    nombreEmpleado VARCHAR(30) NOT NULL,
+    apellidoEmpleado VARCHAR(30) NOT NULL,
+    sueldo DECIMAL(10,2) NOT NULL,
+    horaEntrada TIME NOT NULL,
+    horaSalida TIME NOT NULL,
+    cargoId INT NOT NULL,
+    encargadoId INT,
+    PRIMARY KEY PK_empleadoId(empleadoId),
+    CONSTRAINT FK_Empleados_Cargos FOREIGN KEY Empleados(cargoId)
+        REFERENCES Cargos(cargoId),
+    CONSTRAINT FK_encargadoId_Empleados FOREIGN KEY (encargadoId)
+        REFERENCES Empleados(empleadoId)
 );
 
-create table Ticketsoportes(
-	ticketsoporteId int not null auto_increment,
-    descripcionTicket varchar(250) not null,
-    estatus varchar(30) not null,
-    clienteId  int not null,
-    facturaId int not null,
-    primary key PK_ticketsoporteId (ticketsoporteId),
-    constraint FK_Ticketsoportes_Clientes foreign key (clienteId)
-		references Clientes(clienteId),
-	constraint FK_Ticketsoporte_Facturas foreign key (facturaId)
-		references Facturas(facturaId)
+CREATE TABLE Facturas(
+	facturaId INT NOT NULL AUTO_INCREMENT,
+    fecha DATE NOT NULL,
+    hora TIME NOT NULL,
+    clienteId INT NOT NULL,
+    empleadoId INT NOT NULL,
+    total DECIMAL(10,2),
+    PRIMARY KEY PK_facturaId(facturaId),
+    CONSTRAINT FK_Facturas_Clientes FOREIGN KEY Facturas(clienteId)
+		REFERENCES Clientes(clienteId),
+	CONSTRAINT FK_Facturas_Empleados FOREIGN KEY Facturas(empleadoId)
+		REFERENCES Empleados(empleadoId)
 );
 
-create table Distribuidores(
-	distribuidorId int not null auto_increment,
-    nombreDistribuidor varchar(30) not null,
-    direccionDistribuidor varchar(200) not null,
-    nitDistribuidor varchar(15) not null,
-    telefonoDistribuidor varchar(15) not null,
-    web varchar(50) not null,
-    primary key PK_distribuidorId (distribuidorId)
+CREATE TABLE TicketSoportes(
+	ticketSoporteId INT NOT NULL AUTO_INCREMENT,
+    descripcionTicket VARCHAR(250) NOT NULL,
+    estatus VARCHAR(30) NOT NULL,
+    clienteId INT NOT NULL,
+    facturaId INT,
+    PRIMARY KEY PK_ticketSoporteId(ticketSoporteId),
+    CONSTRAINT FK_TicketSoportes_Clientes FOREIGN KEY TicketSoportes(clienteId)
+		REFERENCES Clientes(clienteId),
+	CONSTRAINT FK_TicketSoportes_Facturas FOREIGN KEY TicketSoportes(facturaId)
+		REFERENCES Facturas(facturaId)
 );
 
-create table Categoriaproductos(
-	categoriaProductoId int not null auto_increment,
-    nombreCategoria varchar(30) not null,
-    descripcionCategoria varchar(100) not null,
-    primary key PK_categoriaProductoId (categoriaProductoId)
+CREATE TABLE Distribuidores(
+	distribuidorId INT NOT NULL AUTO_INCREMENT,
+    nombreDistribuidor VARCHAR(30) NOT NULL,
+    direccionDistribuidor VARCHAR(200) NOT NULL,
+    nitDistribuidor VARCHAR(15) NOT NULL,
+    telefonoDistribuidor VARCHAR(15) NOT NULL,
+    web VARCHAR(50),
+    PRIMARY KEY PK_distribuidorId(distribuidorId)
 );
 
-
-create table Productos(
-	productoId int not null auto_increment,
-    nombreProducto varchar(50) not null,
-    descripcionProducto varchar(100) not null,
-    cantidadStock int,
-    precioVentaUnitario decimal(10,2) not null,
-    precioVentaMayor decimal(10,2) not null,
-    precioCompra decimal(10,2) not null,
-    imagenProducto blob,
-    distribuidorId int not null,
-    categoriaProductoId int not null,
-    primary key PK_productoId (productoId),
-    constraint FK_Productos_Distribuidores foreign key (distribuidorId)
-		references Distribuidores(distribuidorId),
-	constraint FK_Productos_Categoriaproductos foreign key (categoriaProductoId)
-		references Categoriaproductos(categoriaProductoId)
+CREATE TABLE CategoriaProductos(
+	categoriaProductoId INT NOT NULL AUTO_INCREMENT,
+    nombreCategoria VARCHAR(30) NOT NULL,
+    descripcionCategoria VARCHAR(100) NOT NULL,
+    PRIMARY KEY PK_categoriaProductoId(categoriaProductoId)
 );
 
-create table Promociones(
-	promocionId int not null auto_increment,
-    precioPromocion decimal(10,2) not null,
-    descripcionPromocion varchar(100) not null,
-    fechaInicio date,
-    fechaFinalizacion date,
-    productoId int not null,
-    primary key PK_promocionId (promocionId),
-    constraint FK_Promociones_Productos foreign key (productoId)
-		references Productos(productoId)
+CREATE TABLE Productos(
+	productoId INT NOT NULL AUTO_INCREMENT,
+    nombreProducto VARCHAR(50) NOT NULL,
+    descripcionProducto VARCHAR(100),
+    cantidadStock INT NOT NULL,
+    precioVentaUnitario DECIMAL(10,2) NOT NULL,
+    precioVentaMayor DECIMAL(10,2) NOT NULL,
+    precioCompra DECIMAL(10,2) NOT NULL,
+    imagenProducto LONGBLOB,
+    distribuidorId INT NOT NULL,
+    categoriaProductoId INT NOT NULL,
+    PRIMARY KEY PK_productoId(productoId),
+    CONSTRAINT FK_Productos_Distribuidores FOREIGN KEY Productos(distribuidorId)
+		REFERENCES Distribuidores(distribuidorId),
+	CONSTRAINT FK_Productos_CategoriaProductos FOREIGN KEY Productos(categoriaProductoId)
+		REFERENCES CategoriaProductos(categoriaProductoId)
 );
 
-create table Compras(
-	compraId int not null auto_increment,
-    fechaCompra date,
-    totalCompra decimal(10,2) not null,
-    primary key PK_compraId (compraId)
+CREATE TABLE Promociones(
+	promocionId INT NOT NULL AUTO_INCREMENT,
+    precioPromocion DECIMAL(10,2) NOT NULL,
+    descripcionPromocion VARCHAR(100),
+    fechaInicio DATE NOT NULL,
+    fechaFinalizacion DATE NOT NULL,
+    productoId INT NOT NULL,
+    PRIMARY KEY PK_promocionId(promocionId),
+    CONSTRAINT FK_Promociones_Productos FOREIGN KEY Promociones(productoId)
+		REFERENCES Productos(productoId)
 );
 
-create table Detallefacturas(
-	detalleFacturaId int not null auto_increment,
-    facturaId int not null,
-    productoId int not null,
-    primary key PK_detalleFacturaId (detalleFacturaId),
-    constraint FK_DetalleFacturas_Facturas foreign key (facturaId)
-		references Facturas(facturaId),
-	constraint FK_DetalleFacturas_Productos foreign key (productoId)
-		references Productos(productoId)
+CREATE TABLE DetalleFacturas(
+	detalleFacturaId INT NOT NULL AUTO_INCREMENT,
+    facturaId INT NOT NULL,
+    productoId INT NOT NULL,
+    PRIMARY KEY PK_detalleFacturaId(detalleFacturaId),
+    CONSTRAINT FK_DetalleFacturas_Facturas FOREIGN KEY DetalleFacturas(facturaId)
+		REFERENCES Facturas(facturaId),
+	CONSTRAINT FK_DetalleFacturas_Productos FOREIGN KEY DetalleFacturas(productoId)
+		REFERENCES Productos(productoId) 
 );
 
-create table Detallecompras(
-	detalleCompraId int not null auto_increment,
-    cantidadCompra int,
-    productoId int not null,
-    compraId int not null,
-    primary key PK_detalleCompraId (detalleCompraId),
-    constraint FK_DetalleCompras_Productos foreign key (productoId)
-		references Productos(productoId),
-	constraint FK_Detallecompras_Compras foreign key (compraId)
-		references Compras(compraId)
-);        
-    
-insert into Clientes(nombre, apellido, telefono, direccion, nit) values
-	('Luis', 'Cuxun', '1234-1234', 'Ciudad', '715683-0'),
-    ('Alejandro', 'Carrillo', '4123-4123', 'Ciudad', '578426-9'),
-    ('Jesus', 'Sis', '4535-6666', 'Ciudad', '724586-3');
-    
-select * from Clientes;
+CREATE TABLE Compras(
+	compraId INT NOT NULL AUTO_INCREMENT,
+    fechaCompra DATE NOT NULL,
+    totalCompra DECIMAL(10,2),
+    PRIMARY KEY PK_compraId(compraId)
+);
+
+CREATE TABLE DetalleCompras(
+	detalleCompraId INT NOT NULL AUTO_INCREMENT,
+    cantidadCompra INT NOT NULL,
+    productoId INT NOT NULL,
+    compraId INT NOT NULL,
+    PRIMARY KEY PK_detalleCompraId(detalleCompraId),
+    CONSTRAINT FK_DetalleCompras_Productos FOREIGN KEY DetalleCompras(productoId)
+		REFERENCES Productos(productoId),
+	CONSTRAINT FK_DetalleCompras FOREIGN KEY DetalleCompras(compraId)
+		REFERENCES Compras(compraId)
+);
+
+set global time_zone = '-6:00';

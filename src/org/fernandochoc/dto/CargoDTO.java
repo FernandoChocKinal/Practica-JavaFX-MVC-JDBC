@@ -5,7 +5,7 @@
  */
 package org.fernandochoc.dto;
 
-import org.fernandochoc.model.Encargado;
+import org.fernandochoc.model.Cargo;
 
 /**
  *
@@ -13,7 +13,7 @@ import org.fernandochoc.model.Encargado;
  */
 public class CargoDTO {
     private static CargoDTO instance;
-    private Encargado cargo;
+    private Cargo cargo;
     
     private CargoDTO(){
     }
@@ -25,11 +25,11 @@ public class CargoDTO {
         return instance;
     }
 
-    public Encargado getCargo() {
+    public Cargo getCargo() {
         return cargo;
     }
 
-    public void setCargo(Encargado cargo) {
+    public void setCargo(Cargo cargo) {
         this.cargo = cargo;
     }
     

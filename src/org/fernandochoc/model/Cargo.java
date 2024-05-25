@@ -9,15 +9,15 @@ package org.fernandochoc.model;
  *
  * @author Fercho
  */
-public class Encargado {
+public class Cargo {
     private int cargoId;
     private String nombreCargo;
     private String descripcionCargo;
 
-    public Encargado() {
+    public Cargo() {
     }
 
-    public Encargado(int cargoId, String nombreCargo, String descripcionCargo) {
+    public Cargo(int cargoId, String nombreCargo, String descripcionCargo) {
         this.cargoId = cargoId;
         this.nombreCargo = nombreCargo;
         this.descripcionCargo = descripcionCargo;
@@ -49,7 +49,6 @@ public class Encargado {
 
     @Override
     public String toString() {
-        return "Encargado{" + "cargoId=" + cargoId + ", nombreCargo=" + nombreCargo + ", descripcionCargo=" + descripcionCargo + '}';
-    }
-    
+        return "Id: " + cargoId + " | " + nombreCargo;
+    }   
 }

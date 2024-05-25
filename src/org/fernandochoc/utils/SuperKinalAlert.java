@@ -14,56 +14,84 @@ import javafx.scene.control.ButtonType;
  * @author Fercho
  */
 public class SuperKinalAlert {
+
     private static SuperKinalAlert instance;
-    
-    private SuperKinalAlert(){
+
+    private SuperKinalAlert() {
+
     }
-    
-    public static SuperKinalAlert getInstance(){
-        if(instance == null){
+
+    public static SuperKinalAlert getInstance() {
+        if (instance == null) {
             instance = new SuperKinalAlert();
         }
         return instance;
     }
-    
-    public void mostrarAlertaInformacion(int code){
-        if(code == 400){ // Codigo 400 sirve para agregación de registros
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Confirmación Registro");
-            alert.setHeaderText("Confirmación Registro");
-            alert.setContentText("¡Registro realizado con éxito!");
-            alert.showAndWait();
-        } else if(code == 500){// Codigo 500 sirve para edicion de registros
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Edición Registro");
-            alert.setHeaderText("Edición Registro");
-            alert.setContentText("¡Edición realizada con éxito!");
-            alert.showAndWait();
-        } else if(code == 600){// Codigo 600 sirve para alerta de campos pendientes
+
+    public void mostrarAlertaInformacion(int code) {
+        if (code == 400) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Campos Pendientes");
             alert.setHeaderText("Campos Pendientes");
-            alert.setContentText("¡Algunos campos necesarios para el registro están vacíos!");
+            alert.setContentText("Algunos campos necesarios para el registro estan pendientes");
+            alert.showAndWait();
+
+        } else if (code == 401) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Confirmacion de registro");
+            alert.setHeaderText("Confirmacion de registro");
+            alert.setContentText("El registro se ha creado con exito!!!!!");
+            alert.showAndWait();
+        } else if (code == 404) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Error al Eliminar");
+            alert.setHeaderText("Error al Eliminar");
+            alert.setContentText("El registro no se puede eliminar porque es foranea");
+            alert.showAndWait();
+        } else if (code == 402) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Usuario Incorrecto");
+            alert.setHeaderText("Usuario Incorrecto");
+            alert.setContentText("Verifique el Usuario");
+            alert.showAndWait();
+        } else if (code == 403) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Contraseña Incorrecta");
+            alert.setHeaderText("Contraseña Incorrecta");
+            alert.setContentText("Verifique la contraseña");
+            alert.showAndWait();
+        }else if (code == 406) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Producto Agotado");
+            alert.setHeaderText("Producto Agotado");
+            alert.setContentText("Lo sentimos, ya no hay producto en el Stock");
             alert.showAndWait();
         }
     }
-    
-    public Optional<ButtonType> mostrarAlertaConfirmacion(int code){
+
+    public Optional<ButtonType> mostrarAlertaConfirmacion(int code) {
         Optional<ButtonType> action = null;
-        
-        if(code == 404){//Codigo 404 sirve para confirmar la eliminacion de registro
+        if (code == 405) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Eliminación Registro");
-            alert.setHeaderText("Eliminación Registro");
-            alert.setContentText("¿Desea confirmar la eliminación del registro?");
+            alert.setTitle("Eliminacion de registro");
+            alert.setHeaderText("Eliminacion de registro");
+            alert.setContentText("¿Desea confirmar la eliminacion de registro?");
             action = alert.showAndWait();
-        }else if(code == 505){ //Codigo 505 sirve para confirmar la edicion de registros
+        } else if (code == 106) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Edición Registro");
-            alert.setHeaderText("Edición Registro");
-            alert.setContentText("¿Desea confirmar la edición del registro?");
+            alert.setTitle("Edicion de registro");
+            alert.setHeaderText("Edicion de registro");
+            alert.setContentText("¿Desea confirmar la Edicion de registro?");
             action = alert.showAndWait();
         }
         return action;
+    }
+
+    public void alertaSaludo(String usuario) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Bienvenido!");
+        alert.setHeaderText("Bienvenido");
+        alert.setContentText("Bienvenido a Super Kinal " + usuario);
+        alert.showAndWait();
     }
 }
