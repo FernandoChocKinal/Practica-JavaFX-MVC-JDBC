@@ -41,7 +41,7 @@ public class Main extends Application {
     
     private Stage stage;
     private Scene scene;
-    private final String URLVIEW = "/org/ianalfaro/view/";
+    private final String URLVIEW = "/org/fernandochoc/view/";
     
     @Override
     public void start(Stage stage) throws Exception {
